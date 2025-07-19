@@ -34,14 +34,16 @@ public class Booking {
     private LocalDateTime createdAt;
 
 //    Foreign key
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
-    @JsonIgnore
+    @OneToOne(mappedBy = "booking")
     private Payment payment;
 
-    @OneToMany(mappedBy = "booking")
-    private List<User> users = new ArrayList<User>();
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
+    private User user;
 
-    @OneToMany(mappedBy = "booking")
-    private List<Event> events = new ArrayList<Event>();
+    @ManyToOne
+    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JsonIgnore
+    private Event event;
 }

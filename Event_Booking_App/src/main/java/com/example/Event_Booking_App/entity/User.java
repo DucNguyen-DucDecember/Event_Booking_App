@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -36,13 +38,9 @@ public class User {
     private LocalDateTime createdAt;
 
     //Foreign key
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "reminder_Id", referencedColumnName = "id")
-    @JsonIgnore
+    @OneToOne(mappedBy = "user")
     private Reminder reminder;
 
-    @ManyToOne
-    @JoinColumn(name = "booking_id", referencedColumnName = "id")
-    @JsonIgnore
-    private Booking booking;
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings = new ArrayList<Booking>();
 }

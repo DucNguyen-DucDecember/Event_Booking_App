@@ -1,5 +1,6 @@
 package com.example.Event_Booking_App.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +26,8 @@ public class Reminder {
     private LocalDateTime createdAt;
 
 //    Foreign key
-    @OneToOne(mappedBy = "reminder")
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 }

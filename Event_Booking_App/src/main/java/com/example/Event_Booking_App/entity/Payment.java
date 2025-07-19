@@ -1,5 +1,6 @@
 package com.example.Event_Booking_App.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +24,14 @@ public class Payment {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
     @Enumerated(EnumType.STRING)
-    private StatusPayment statusPayment = StatusPayment.PAID;
+    private StatusPayment status = StatusPayment.PAID;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
 //    Foreign key
-    @OneToOne(mappedBy = "payment")
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    @JsonIgnore
     private Booking booking;
 }

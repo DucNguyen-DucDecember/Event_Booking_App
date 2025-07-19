@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -42,8 +44,6 @@ public class Event {
     private LocalDateTime updatedAt;
 
 //    Foreign key
-    @ManyToOne
-    @JoinColumn(name = "booking_id", referencedColumnName = "id")
-    @JsonIgnore
-    private Booking booking;
+    @OneToMany(mappedBy = "event")
+    private List<Booking> bookings = new ArrayList<Booking>();
 }
