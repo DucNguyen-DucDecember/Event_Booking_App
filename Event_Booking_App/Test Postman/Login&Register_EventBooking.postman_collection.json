@@ -20,7 +20,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"fullName\": \"John Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"password123\"\r\n}\r\n",
+					"raw": "{\r\n  \"fullName\": \"Minh Hoang\",\r\n  \"email\": \"john.doe1@example.com\",\r\n  \"password\": \"123\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -82,6 +82,103 @@
 						"login"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginAdmin - EventBookingApp",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"AdminPass123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Event (onlyAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ADMIN_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Spring Boot Workshop\",\r\n  \"dateTime\": \"2025-09-01T14:00:00\",\r\n  \"location\": \"HCMC Tech Park\",\r\n  \"price\": 150.00,\r\n  \"description\": \"Hands‑on workshop về Spring Boot và Spring Security\",\r\n  \"imageUrl\": \"https://cdn.example.com/images/spring_workshop.png\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Event by ID(onlyAdmin)",
+			"request": {
+				"method": "PUT",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Event by ID (onlyAdmin)",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

@@ -31,7 +31,9 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(String msg, List<ErrorDto> errors) {
         return new ApiResponse<>(false, msg, null, errors);
     }
-
+    public static <T> ApiResponse<T> error(String msg) {
+        return new ApiResponse<>(false, msg, null, null);
+    }
     // getters / setters
     public boolean isSuccess() { return success; }
     public void setSuccess(boolean success) { this.success = success; }
