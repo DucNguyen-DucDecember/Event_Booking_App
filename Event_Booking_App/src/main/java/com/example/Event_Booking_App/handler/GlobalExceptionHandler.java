@@ -1,6 +1,7 @@
 package com.example.Event_Booking_App.handler;
 
 import com.example.Event_Booking_App.dto.*;
+import com.example.Event_Booking_App.exception.EmailAlreadyExistsException;
 import org.springframework.http.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.*;
@@ -30,5 +31,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiResponse<>(false, "Invalid email or password", null, null));
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleEmailExists(EmailAlreadyExistsException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(ApiResponse.error(ex.getMessage(), null));
     }
 }

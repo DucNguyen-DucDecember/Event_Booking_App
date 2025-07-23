@@ -1,18 +1,27 @@
 package com.example.Event_Booking_App.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtResponse {
     private String accessToken;
     private String expire;
 
-    public JwtResponse(String accessToken, String expire) {
-        this.accessToken = accessToken;
-        this.expire = expire;
-    }
+//    public JwtResponse(String accessToken, String expire) {
+//        this.accessToken = accessToken;
+//        this.expire = expire;
+//    }
 
     // getters / setters
-    public String getAccessToken() { return accessToken; }
-    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
-
-    public String getExpire() { return expire; }
-    public void setExpire(String expire) { this.expire = expire; }
+//    public String getAccessToken() { return accessToken; }
+//    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+//
+//    public String getExpire() { return expire; }
+//    public void setExpire(String expire) { this.expire = expire; }
 }
