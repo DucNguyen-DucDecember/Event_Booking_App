@@ -24,31 +24,42 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(name = "full_name", nullable = false)
     private String fullName;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
-    @Column(nullable = true)
-    private String avatar;
+
     @Column
+    private String avatar;
+
+    /** Cột đơn để nhanh lookup quyền chính */
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role = Role.USER;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    /** Collection để hỗ trợ multi‐role (và sinh getRoles()) */
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
-    //Foreign key
+
+    // Quan hệ khác
     @OneToOne(mappedBy = "user")
     private Reminder reminder;
 
     @OneToMany(mappedBy = "user")
-    private List<Booking> bookings = new ArrayList<Booking>();
+    private List<Booking> bookings = new ArrayList<>();
 }

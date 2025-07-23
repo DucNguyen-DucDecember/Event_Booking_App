@@ -1,7 +1,9 @@
 package com.example.Event_Booking_App.handler;
 
 import com.example.Event_Booking_App.dto.*;
+import com.example.Event_Booking_App.exception.EventNotFoundException;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,4 +33,19 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiResponse<>(false, "Invalid email or password", null, null));
     }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<?>> handleParseError(HttpMessageNotReadableException ex) {
+        // Lấy thông tin field gây lỗi nếu cần, ở đây giả định là price
+        ErrorDto err = new ErrorDto("price", "Price must be a valid numeric value");
+        ApiResponse<?> body = ApiResponse.error("Invalid request format", List.of(err));
+        return ResponseEntity.unprocessableEntity().body(body);
+    }
+    @ExceptionHandler(EventNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiResponse<Void>> handleEventNotFound(EventNotFoundException ex) {
+        ApiResponse<Void> body = ApiResponse.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+
 }
