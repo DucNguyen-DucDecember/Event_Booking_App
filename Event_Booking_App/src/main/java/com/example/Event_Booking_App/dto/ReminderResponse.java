@@ -6,7 +6,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorDto {
-    private String field;
-    private String message;
+public class ReminderResponse {
+    private Boolean eventReminder;
 }
