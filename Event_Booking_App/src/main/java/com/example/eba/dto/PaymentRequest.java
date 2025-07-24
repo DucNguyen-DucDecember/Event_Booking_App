@@ -2,9 +2,6 @@ package com.example.eba.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 
 public class PaymentRequest {

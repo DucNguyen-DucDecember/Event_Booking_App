@@ -1,22 +1,19 @@
 package com.example.eba.service;
 
-import com.example.eba.dto.BookingRequest;
-import com.example.eba.dto.BookingResponse;
 import com.example.eba.dto.PaymentRequest;
 import com.example.eba.dto.PaymentResponse;
 import com.example.eba.entity.*;
-import com.example.eba.exception.EventNotFoundException;
+import com.example.eba.exception.BookingNotFoundException;
 import com.example.eba.repository.BookingRepository;
 import com.example.eba.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private PaymentRepository paymentRepository;
-    private BookingRepository bookingRepository;
+    private final PaymentRepository paymentRepository;
+    private final BookingRepository bookingRepository;
 
     @Autowired
     public PaymentServiceImpl(PaymentRepository paymentRepository, BookingRepository bookingRepository) {
@@ -34,14 +31,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     private void updateStatus(Long bookingId, StatusBooking statusBooking) {
         Booking b = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new EventNotFoundException(bookingId));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
         b.setStatus(statusBooking);
         bookingRepository.save(b);
     }
 
     private Payment mapToEntity(PaymentRequest req) {
         Booking b = bookingRepository.findById(req.getBookingId())
-                .orElseThrow(() -> new EventNotFoundException(req.getBookingId()));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
         Payment p = new Payment();
         p.setAmount(b.getTotalPrice());
         p.setStatus(StatusPayment.PAID);

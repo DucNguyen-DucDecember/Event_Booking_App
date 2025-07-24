@@ -1,6 +1,5 @@
 package com.example.eba.repository;
 
-import com.example.eba.entity.Booking;
 import com.example.eba.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
