@@ -21,6 +21,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         // {"success":false, "message":"Forbidden – You do not have permission to perform this action"}
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         ApiResponse<?> body = ApiResponse.error("Forbidden – You do not have permission to perform this action");
         response.getWriter().write(mapper.writeValueAsString(body));
     }
