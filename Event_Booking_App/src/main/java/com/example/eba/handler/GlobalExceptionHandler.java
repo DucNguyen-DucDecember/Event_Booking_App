@@ -73,5 +73,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResponse.error("Validation failed", errors));
     }
 
-
 }

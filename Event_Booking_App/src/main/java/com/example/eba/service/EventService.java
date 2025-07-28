@@ -9,5 +9,4 @@ public interface EventService {
 
     EventResponse updateEvent(Long id, EventRequest request);
     void deleteEvent(Long id);
-
 }
