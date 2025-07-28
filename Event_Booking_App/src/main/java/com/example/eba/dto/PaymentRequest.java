@@ -10,16 +10,17 @@ public class PaymentRequest {
     private Long bookingId;
 
     @NotNull(message = "Card number is required.")
-    @Pattern(regexp = "\\d{16}", message = "Card number must be exactly 16 digits")
+    @Pattern(regexp = "\\d{16}", message = "Invalid card number")
+
     private String cardNumber;
 
     @NotNull(message = "Expiry date is required.")
-    @Future(message = "Date & Time must be in the future")
-    @JsonFormat(pattern = "MM-yy")
+    @Future(message = "Invalid expiry format")
+    @JsonFormat(pattern = "MM/yy")
     private YearMonth expiry;
 
     @NotNull(message = "CVV is required.")
-    @Pattern(regexp = "\\d{3,4}", message = "Card number must be exactly 3-4 digits")
+    @Pattern(regexp = "\\d{3,4}", message = "Invalid CVV")
     private String cvv;
 
     public Long getBookingId() {
@@ -35,7 +36,12 @@ public class PaymentRequest {
     }
 
     public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+        if (cardNumber != null){
+            this.cardNumber = cardNumber.replaceAll("\\s", "");
+        }
+        else {
+            this.cardNumber = null;
+        }
     }
 
     public YearMonth getExpiry() {

@@ -39,10 +39,14 @@ public class PaymentServiceImpl implements PaymentService {
     private Payment mapToEntity(PaymentRequest req) {
         Booking b = bookingRepository.findById(req.getBookingId())
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+        if (b.getStatus() == StatusBooking.PAID){
+            throw new BookingNotFoundException("Booking already paid");
+        }
         Payment p = new Payment();
         p.setAmount(b.getTotalPrice());
         p.setStatus(StatusPayment.PAID);
         p.setBooking(b);
+
         return p;
     }
 

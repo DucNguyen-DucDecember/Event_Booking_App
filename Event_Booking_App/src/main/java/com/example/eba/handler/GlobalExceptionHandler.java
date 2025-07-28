@@ -1,7 +1,10 @@
 package com.example.eba.handler;
 
 import com.example.eba.dto.*;
+import com.example.eba.exception.BookingNotFoundException;
 import com.example.eba.exception.EventNotFoundException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,8 +37,23 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<?>> handleParseError(HttpMessageNotReadableException ex) {
-        // Lấy thông tin field gây lỗi nếu cần, ở đây giả định là price
-        ErrorDto err = new ErrorDto("price", "Price must be a valid numeric value");
+        Throwable cause = ex.getCause();
+
+        String fieldName = "unknown";
+        String message = "Validation failed";
+
+        if (cause instanceof InvalidFormatException invalidFormatEx) {
+            List<JsonMappingException.Reference> path = invalidFormatEx.getPath();
+            if (!path.isEmpty()) {
+                fieldName = path.get(0).getFieldName();
+            }
+
+            message = String.format("Invalid %s format",
+                    fieldName,
+                    invalidFormatEx.getTargetType().getSimpleName().toLowerCase());
+        }
+
+        ErrorDto err = new ErrorDto(fieldName, message);
         ApiResponse<?> body = ApiResponse.error("Invalid request format", List.of(err));
         return ResponseEntity.unprocessableEntity().body(body);
     }
@@ -44,6 +62,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleEventNotFound(EventNotFoundException ex) {
         ApiResponse<Void> body = ApiResponse.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiResponse<Void>> handleBookingNotFound(BookingNotFoundException ex) {
+
+        ErrorDto err = new ErrorDto("bookingId", "Booking not found or already paid");
+        List<ErrorDto> errors = List.of(err);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResponse.error("Validation failed", errors));
     }
 
 
