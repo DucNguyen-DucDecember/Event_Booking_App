@@ -1,7 +1,7 @@
 # Event Booking App API docs #
 
 ## Auth API ##
-1. **Registration**
+### 1. **Registration** ### 
 - Endpoint: **POST /api/auth/register**
 - Method: POST
 - Auth: No
@@ -47,7 +47,7 @@
     - Email format must be valid.
     - Password must be at least 8 characters, contains letters and numbers.
 
-2. **Login**
+### 2. **Login** ###
 - Endpoint: **POST /api/auth/login**
 - Method: POST
 - Auth: No
@@ -100,7 +100,7 @@
 
 ## Events ##
 
-1. **Create events**
+### 1. **Create events** ###
 - Endpoint: **POST /api/events**
 - Method: POST
 - Auth: Bearer Token, ADMIN permission
@@ -153,7 +153,7 @@
     - Price must be >=0.
     - Description must be less than 1000 characters
 
-2. **Update an event**
+### 2. **Update an event** ###
 - Endpoint: **PUT /api/events/{id}**
 - Method: PUT
 - Auth: Bearer Token, ADMIN permission
@@ -212,7 +212,7 @@
 - Note: 
     - Event must be existed.
 
-3. **Delete an event**
+### 3. **Delete an event** ###
 - Endpoint: **DELETE /api/events/{id}**
 - Method: DELETE
 - Auth: Bearer Token, ADMIN permission
@@ -231,7 +231,7 @@
 - Note: 
     - Event must be existed.
 
-4. **Get events list**
+### 4. **Get events list** ###
 - Endpoint: **GET /api/events**
 - Method: GET
 - Auth: USER permission
@@ -270,7 +270,7 @@
 }
 ```
 
-5. **Get an event details**
+### 5. **Get an event details** ###
 - Endpoint: **GET /api/events/{id}**
 - Method: GET
 - Auth: Bearer Token
