@@ -26,6 +26,11 @@ public class ReminderService {
     private UserDetailsServiceImpl userDetailsService;
 
     public ReminderResponse updateReminder(ReminderRequest request) {
+        // Validation
+        if (request.getEventReminder() == null) {
+            throw new IllegalArgumentException("Event reminder must be true or false");
+        }
+
         // Lấy thông tin user từ JWT token
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
@@ -40,7 +45,7 @@ public class ReminderService {
                 .orElseGet(() -> {
                     Reminder newReminder = Reminder.builder()
                             .user(user)
-                            .eventReminder(true) // Giá trị mặc định từ @Builder.Default
+                            .eventReminder(true)
                             .build();
                     return reminderRepository.save(newReminder);
                 });
@@ -49,9 +54,8 @@ public class ReminderService {
         reminder.setEventReminder(request.getEventReminder());
         reminderRepository.save(reminder);
 
-        // Trả về response với giá trị eventReminder đã cập nhật
         return ReminderResponse.builder()
-                .eventReminder(reminder.isEventReminder()) // Sửa thành isEventReminder
+                .eventReminder(reminder.isEventReminder())
                 .build();
     }
 }

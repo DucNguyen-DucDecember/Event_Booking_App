@@ -22,16 +22,28 @@ public class EventService {
 
     public List<EventResponse> getEvents(String type, String search, int page, int size) {
         // Validation
-        if (page < 1 || size < 1) {
-            throw new IllegalArgumentException("Page and size must be positive integers");
+        if (page < 1) {
+            throw new IllegalArgumentException("Page must be a positive integer");
         }
-        if (type != null && !Arrays.asList("popular", "upcoming", "nearby").contains(type)) {
+        if (size < 1) {
+            throw new IllegalArgumentException("Size must be a positive integer");
+        }
+        if (type != null && !Arrays.asList("popular", "upcoming").contains(type)) {
             throw new IllegalArgumentException("Invalid type value");
         }
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        // Giả định location là null nếu không có thông tin vị trí người dùng
-        Page<Event> eventPage = eventRepository.findEventsByTypeAndSearch(type, search, null, pageable);
+        Page<Event> eventPage;
+
+        // Chọn repository method dựa trên type
+        if ("popular".equals(type)) {
+            eventPage = eventRepository.findPopularEvents(type, search, pageable);
+        } else if ("upcoming".equals(type)) {
+            eventPage = eventRepository.findUpcomingEvents(type, search, pageable);
+        } else {
+            // Trường hợp không có type, trả về tất cả sự kiện
+            eventPage = eventRepository.findAll(pageable);
+        }
 
         return eventPage.getContent().stream()
                 .map(event -> EventResponse.builder()
@@ -47,6 +59,9 @@ public class EventService {
     }
 
     public EventResponse getEventById(Long id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Event ID must be a positive integer");
+        }
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Event not found"));
         return EventResponse.builder()
@@ -60,7 +75,3 @@ public class EventService {
                 .build();
     }
 }
-
-//up date 23/7/2025
-//Thêm validation cho type (chỉ chấp nhận popular, upcoming, nearby).
-//Gọi findEventsByTypeAndSearch từ EventRepository với location=null (có thể mở rộng nếu cần thêm logic vị trí).

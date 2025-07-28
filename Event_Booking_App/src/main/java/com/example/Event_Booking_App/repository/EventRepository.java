@@ -11,13 +11,35 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    @Query("SELECT e FROM Event e WHERE " +
-            "(:type IS NULL OR " +
-            "(:type = 'popular' AND e.price > 50) OR " +
-            "(:type = 'upcoming' AND e.dateTime > CURRENT_TIMESTAMP) OR " +
-            "(:type = 'nearby' AND e.location LIKE %:location%)) AND " +
-            "(:search IS NULL OR e.title LIKE %:search% OR e.description LIKE %:search%)")
-    Page<Event> findEventsByTypeAndSearch(String type, String search, String location, Pageable pageable);
+
+    @Query(value = "SELECT e.*, COUNT(b.id) AS booking_count " +
+            "FROM events e " +
+            "LEFT JOIN bookings b ON e.id = b.event_id " +
+            "WHERE :type = 'popular' " +
+            "AND (:search IS NULL OR e.title LIKE %:search% OR e.description LIKE %:search%) " +
+            "GROUP BY e.id " +
+            "ORDER BY booking_count DESC",
+            countQuery = "SELECT COUNT(DISTINCT e.id) " +
+                    "FROM events e " +
+                    "LEFT JOIN bookings b ON e.id = b.event_id " +
+                    "WHERE :type = 'popular' " +
+                    "AND (:search IS NULL OR e.title LIKE %:search% OR e.description LIKE %:search%)",
+            nativeQuery = true)
+    Page<Event> findPopularEvents(String type, String search, Pageable pageable);
+
+    @Query(value = "SELECT e.* " +
+            "FROM events e " +
+            "WHERE :type = 'upcoming' " +
+            "AND e.date_time >= NOW() " +
+            "AND (:search IS NULL OR e.title LIKE %:search% OR e.description LIKE %:search%) " +
+            "ORDER BY e.date_time ASC",
+            countQuery = "SELECT COUNT(*) " +
+                    "FROM events e " +
+                    "WHERE :type = 'upcoming' " +
+                    "AND e.date_time >= NOW() " +
+                    "AND (:search IS NULL OR e.title LIKE %:search% OR e.description LIKE %:search%)",
+            nativeQuery = true)
+    Page<Event> findUpcomingEvents(String type, String search, Pageable pageable);
 
     Optional<Event> findById(Long id);
 }
