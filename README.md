@@ -14,5 +14,5 @@
 - Run
 - Open **Postman**, import the postman's JSON file above.
 - Setting up variables
-    - {{baseUrl}}: put your domain here (if you run on local then put it as ```localhost:8080```).
-    - {{token}}: login token, you need to update it by hand per calling login endpoint.
+    - **{{baseUrl}}**: put your domain here (if you run on local then put it as ```localhost:8080```).
+    - **{{token}}**: login token, you need to update it by hand per calling login endpoint.
