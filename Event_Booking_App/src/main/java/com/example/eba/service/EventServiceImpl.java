@@ -6,7 +6,12 @@ import com.example.eba.entity.Event;
 import com.example.eba.exception.EventNotFoundException;
 import com.example.eba.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -16,6 +21,39 @@ public class EventServiceImpl implements EventService {
     @Autowired
     public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
+    }
+
+    @Override
+    public Page<EventResponse> getAllEvents(String type, String search, int page, int size) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page must be a positive integer");
+        }
+        if (size < 1) {
+            throw new IllegalArgumentException("Size must be a positive integer");
+        }
+        if (type != null && !Arrays.asList("popular", "upcoming").contains(type)) {
+            throw new IllegalArgumentException("Invalid type value");
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Event> eventPage;
+
+        if ("popular".equals(type)) {
+            eventPage = eventRepository.findPopularEvents(search, pageable);
+        } else if ("upcoming".equals(type)) {
+            eventPage = eventRepository.findUpcomingEvents(search, pageable);
+        } else {
+            eventPage = eventRepository.findAll(pageable);
+        }
+
+        return eventPage.map(this::mapToResponse);
+    }
+
+    @Override
+    public EventResponse getEventById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
+        return mapToResponse(event);
     }
 
     @Override
@@ -35,7 +73,6 @@ public class EventServiceImpl implements EventService {
         Event e = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException(id));
 
-        // update tất cả các field
         e.setTitle(request.getTitle());
         e.setDateTime(request.getDateTime());
         e.setLocation(request.getLocation());
@@ -54,7 +91,6 @@ public class EventServiceImpl implements EventService {
         eventRepository.delete(e);
     }
 
-    // helper chuyển DTO → Entity
     private Event mapToEntity(EventRequest req) {
         Event e = new Event();
         e.setTitle(req.getTitle());
@@ -66,7 +102,6 @@ public class EventServiceImpl implements EventService {
         return e;
     }
 
-    // helper chuyển Entity → DTO
     private EventResponse mapToResponse(Event src) {
         EventResponse resp = new EventResponse();
         resp.setId(src.getId());
@@ -78,6 +113,4 @@ public class EventServiceImpl implements EventService {
         resp.setImageUrl(src.getImageUrl());
         return resp;
     }
-
-
 }
