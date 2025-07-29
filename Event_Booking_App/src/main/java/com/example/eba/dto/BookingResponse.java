@@ -1,12 +1,13 @@
 package com.example.eba.dto;
 
 import com.example.eba.entity.Event;
+import com.example.eba.entity.EventInfo;
 
 import java.math.BigDecimal;
 
 public class BookingResponse {
     private long bookingId;
-    private Event event;
+    private EventInfo event;
     private Integer quantity;
     private BigDecimal totalPrice;
 
@@ -18,11 +19,11 @@ public class BookingResponse {
         this.bookingId = bookingId;
     }
 
-    public Event getEvent() {
+    public EventInfo getEvent() {
         return event;
     }
 
-    public void setEvent(Event event) {
+    public void setEvent(EventInfo event) {
         this.event = event;
     }
 

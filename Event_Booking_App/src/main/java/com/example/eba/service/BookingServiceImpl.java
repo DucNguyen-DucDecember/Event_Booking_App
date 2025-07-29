@@ -49,7 +49,9 @@ public class BookingServiceImpl implements BookingService {
     private BookingResponse mapToResponse(Booking src) {
         BookingResponse resp = new BookingResponse();
         resp.setBookingId(src.getId());
-        resp.setEvent(src.getEvent());
+        Event event = src.getEvent();
+        EventInfo eventInfo = new EventInfo(event.getId(),event.getTitle(),event.getDateTime(),event.getLocation());
+        resp.setEvent(eventInfo);
         resp.setQuantity(src.getQuantity());
         resp.setTotalPrice(src.getTotalPrice());
         return resp;
